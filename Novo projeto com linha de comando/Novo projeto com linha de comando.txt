@@ -1,0 +1,7 @@
+- dotnet new webapi -n MinhaPrimeiraApi
+- code .
+- dotnet run
+- dotnet watch run
+
+uri
+https://localhost:5001/WeatherForecast
