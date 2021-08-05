@@ -6,9 +6,9 @@ namespace DevIO.Bussiness.Interfaces.Service
 {
     public interface ISupplierService : IDisposable
     {
-        Task Insert(Supplier supplier);
-        Task Update(Supplier supplier);
-        Task Delete(Guid id);
+        Task<bool> Insert(Supplier supplier);
+        Task<bool> Update(Supplier supplier);
+        Task<bool> Delete(Guid id);
         Task UpdateAddress(Address address);
     }
 }

@@ -23,21 +23,23 @@ namespace DevIO.Bussiness.Services
             _addressRepository = addressRepository;
         }
 
-        public async Task Insert(Supplier supplier)
+        public async Task<bool> Insert(Supplier supplier)
         {
             if (!await RunValidation(new SupplierValidation(_supplierRepository), supplier)
                 || !await RunValidation(new AddressValidation(), supplier.Address))
-                return;
+                return false;
 
             await _supplierRepository.Insert(supplier);
+            return true;
         }
 
-        public async Task Update(Supplier supplier)
+        public async Task<bool> Update(Supplier supplier)
         {
             if (!await RunValidation(new SupplierValidation(_supplierRepository), supplier))
-                return;
+                return false;
 
             await _supplierRepository.Update(supplier);
+            return true;
         }
 
         public async Task UpdateAddress(Address address)
@@ -48,16 +50,21 @@ namespace DevIO.Bussiness.Services
             await _addressRepository.Update(address);
         }
 
-        public async Task Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
             bool hasProducts = _supplierRepository.GetSupplierProductsAdress(id).Result.Products.Any();
             if (hasProducts)
             {
                 Notificar("O fornecedor possui produtos cadastrados.");
-                return;
+                return false;
             }
 
+            var address = await _addressRepository.GetAddressBySupplier(id);
+            if (address != null)
+                await _addressRepository.Delete(address.Id);
+
             await _supplierRepository.Delete(id);
+            return true;
         }
 
         public void Dispose()
