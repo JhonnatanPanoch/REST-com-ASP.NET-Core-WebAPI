@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DevIO.Api.ViewModels;
+using DevIO.Bussiness.Interfaces;
 using DevIO.Bussiness.Interfaces.Repository;
 using DevIO.Bussiness.Interfaces.Service;
 using DevIO.Bussiness.Models;
@@ -15,17 +16,21 @@ namespace DevIO.Api.Controllers
     public class SuppliersController : MainController
     {
         private readonly ISupplierRepository _supplierRepository;
+        private readonly IAddressRepository _addressRepository;
         private readonly ISupplierService _supplierService;
         private readonly IMapper _map;
 
         public SuppliersController(
             ISupplierRepository supplierRepository,
             IMapper map,
-            ISupplierService supplierService)
+            ISupplierService supplierService,
+            INotificator notificator, 
+            IAddressRepository addressRepository) : base(notificator)
         {
             _supplierRepository = supplierRepository;
             _map = map;
             _supplierService = supplierService;
+            _addressRepository = addressRepository;
         }
 
         [HttpGet]
@@ -50,44 +55,65 @@ namespace DevIO.Api.Controllers
         public async Task<ActionResult<SupplierViewModel>> Create(SupplierViewModel viewModel)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return CustomResponse(ModelState);
 
-            Supplier model = _map.Map<Supplier>(viewModel);
-            bool success = await _supplierService.Insert(model);
+            await _supplierService.Insert(_map.Map<Supplier>(viewModel));
 
-            if (!success)
-                return BadRequest();
-
-            return Ok(model);
+            return CustomResponse(viewModel);
         }
 
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<SupplierViewModel>> Update(Guid id, SupplierViewModel viewModel)
         {
-            if (id != viewModel.Id || !ModelState.IsValid)
-                return BadRequest();
+            if (id != viewModel.Id)
+            {
+                NotifyError("Há uma diferença de informações na requisição.");
+                return CustomResponse(viewModel);
+            }
 
-            Supplier model = _map.Map<Supplier>(viewModel);
-            bool success = await _supplierService.Update(model);
+            if (!ModelState.IsValid)
+                return CustomResponse(ModelState);
 
-            if (!success)
-                return BadRequest();
+            await _supplierService.Update(_map.Map<Supplier>(viewModel));
 
-            return Ok(model);
+            return CustomResponse(viewModel);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<SupplierViewModel>> Delete(Guid id)
         {
-            SupplierViewModel supplier = _map.Map<SupplierViewModel>(await _supplierRepository.Get(id));
-            if (supplier == null)
+            SupplierViewModel supplierViewModel = _map.Map<SupplierViewModel>(await _supplierRepository.Get(id));
+            if (supplierViewModel == null)
                 return NotFound();
 
-            bool success = await _supplierService.Delete(id);
-            if (!success)
-                return BadRequest();
+            await _supplierService.Delete(id);
 
-            return Ok(supplier);
+            return CustomResponse(supplierViewModel);
+        }
+
+        [HttpGet("get-address/{id:guid}")]
+        public async Task<ActionResult<AddressViewModel>> GetAddressById(Guid id)
+        {
+            AddressViewModel addressViewModel = _map.Map<AddressViewModel>(await _addressRepository.Get(id));
+            return addressViewModel;
+        }
+
+        [HttpPut("atualizar-endereco/{id:guid}")]
+        public async Task<ActionResult<AddressViewModel>> UpdateAddress(Guid id, AddressViewModel addressViewModel)
+        {
+            if (id != addressViewModel.Id)
+            {
+                NotifyError("Há uma diferença de informações na requisição.");
+                return CustomResponse(addressViewModel);
+            }
+
+            if (!ModelState.IsValid)
+                return CustomResponse(ModelState);
+
+            await _addressRepository.Update(_map.Map<Address>(addressViewModel));
+
+            return CustomResponse(addressViewModel);
+
         }
     }
 }
