@@ -24,6 +24,9 @@ namespace DevIO.Bussiness.Services
             if (!await RunValidation(new ProductValidation(), product))
                 return;
 
+            product.CreateDate = DateTime.Now;
+            product.Supplier = null;
+
             await _productRepository.Insert(product);
         }
 
