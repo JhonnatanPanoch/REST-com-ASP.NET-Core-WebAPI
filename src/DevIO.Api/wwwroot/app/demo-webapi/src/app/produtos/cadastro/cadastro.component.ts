@@ -55,7 +55,7 @@ export class CadastroComponent implements OnInit {
       let produtoForm = Object.assign({}, this.produto, this.produtoForm.value);
       produtoForm.active = this.produtoForm.get('active').value
 
-      this.produtoHandle(produtoForm)
+      this.produtoHandleAlternativo(produtoForm)
         .subscribe(
           result => { this.onSaveComplete(result) },
           fail => { this.onError(fail) }
@@ -77,8 +77,8 @@ export class CadastroComponent implements OnInit {
     produto.image = this.imagemNome;
     produto.imageUpload = null;
 
-    formdata.append('produto', JSON.stringify(produto));
-    formdata.append('ImagemUpload', this.imagemForm, this.imagemNome);
+    formdata.append('product', JSON.stringify(produto));
+    formdata.append('ImageUpload', this.imagemForm, this.imagemNome);
 
     return this.produtoService.registrarProdutoAlternativo(formdata);
   }

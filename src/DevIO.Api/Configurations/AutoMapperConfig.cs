@@ -11,6 +11,7 @@ namespace DevIO.Api.Configurations
             CreateMap<Supplier, SupplierViewModel>().ReverseMap();
             CreateMap<Address, AddressViewModel>().ReverseMap();
             
+            CreateMap<ProductImageViewModel, Product>().ReverseMap();
             CreateMap<ProductViewModel, Product>();
             CreateMap<Product, ProductViewModel>()
                 .ForMember(dest => dest.SupplierName, opt => opt.MapFrom(src => src.Supplier.Name));
