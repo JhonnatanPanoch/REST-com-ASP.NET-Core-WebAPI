@@ -127,6 +127,40 @@ namespace DevIO.Api.Controllers
             return Ok(file);
         }
 
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, ProductViewModel productViewModel)
+        {
+            if (id != productViewModel.Id)
+            {
+                NotifyError("Os ids informados não são iguais!");
+                return CustomResponse();
+            }
+
+            var produtoAtualizacao = await GetProduct(id);
+            productViewModel.Image = produtoAtualizacao.Image;
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            if (productViewModel.ImageUpload != null)
+            {
+                var imagemNome = Guid.NewGuid() + "_" + productViewModel.Image;
+                if (!UploadFile(productViewModel.ImageUpload, imagemNome))
+                {
+                    return CustomResponse(ModelState);
+                }
+
+                produtoAtualizacao.Image = imagemNome;
+            }
+
+            produtoAtualizacao.Name = productViewModel.Name;
+            produtoAtualizacao.Description = productViewModel.Description;
+            produtoAtualizacao.Value = productViewModel.Value;
+            produtoAtualizacao.Active = productViewModel.Active;
+
+            await _productService.Update(_mapper.Map<Product>(produtoAtualizacao));
+
+            return CustomResponse(productViewModel);
+        }
+
         private bool UploadFile(string file, string imgName)
         {
             if (string.IsNullOrEmpty(file))

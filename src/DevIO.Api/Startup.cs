@@ -2,7 +2,6 @@ using DevIO.Api.Configurations;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,33 +27,19 @@ namespace DevIO.Api
             });
 
             // Configura o entity framework.
-            services.AddDbContext<CustomDbContext>(options => 
+            services.AddDbContext<CustomDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddAutoMapper(typeof(Startup));
-            services.AddControllers();
 
-            // Remove configuração padrão da validação do ModelState
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
-
-            // Resolver problemas de CORS
-            services.AddCors(cors =>
-            {
-                cors.AddPolicy("Development", builder => builder
-                    //.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .SetIsOriginAllowed(origin => true) //.AllowAnyOrigin()
-                    .AllowCredentials());
-            });
+            services.WebApiConfig();
 
             services.ResolveDependencies();
         }
+
+
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -65,14 +50,7 @@ namespace DevIO.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DevIO.Api v1"));
             }
 
-            app.UseCors("Development"); // Resolver problemas de CORS
-            app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseMvcConfig();
         }
     }
 }
