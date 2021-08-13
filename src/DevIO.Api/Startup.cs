@@ -26,11 +26,7 @@ namespace DevIO.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DevIO.Api", Version = "v1" });
             });
 
-            // Configura o entity framework.
-            services.AddDbContext<CustomDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            services.AddIdentityConfig(Configuration);
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -38,8 +34,6 @@ namespace DevIO.Api
 
             services.ResolveDependencies();
         }
-
-
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -50,6 +44,7 @@ namespace DevIO.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DevIO.Api v1"));
             }
 
+            app.UseAuthentication();
             app.UseMvcConfig();
         }
     }

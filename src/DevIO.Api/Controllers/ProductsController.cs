@@ -4,6 +4,7 @@ using DevIO.Bussiness.Interfaces;
 using DevIO.Bussiness.Interfaces.Repository;
 using DevIO.Bussiness.Interfaces.Service;
 using DevIO.Bussiness.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,6 +15,8 @@ using System.Threading.Tasks;
 
 namespace DevIO.Api.Controllers
 {
+    [Authorize]
+    [ApiController]
     [Route("api/v1/[controller]")]
     public class ProductsController : MainController
     {
