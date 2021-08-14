@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace DevIO.Api.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ProductsController : MainController
@@ -35,6 +35,7 @@ namespace DevIO.Api.Controllers
             _productRepository = productRepository;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IEnumerable<ProductViewModel>> GetAll()
         {
@@ -66,6 +67,7 @@ namespace DevIO.Api.Controllers
             return CustomResponse(productViewModel);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<ProductViewModel>> Create(ProductViewModel viewModel)
         {

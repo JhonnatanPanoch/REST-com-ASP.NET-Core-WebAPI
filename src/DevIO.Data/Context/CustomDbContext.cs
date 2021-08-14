@@ -6,7 +6,7 @@ namespace DevIO.Data.Context
 {
     public class CustomDbContext : DbContext
     {
-        public CustomDbContext(DbContextOptions options) : base(options)
+        public CustomDbContext(DbContextOptions<CustomDbContext> options) : base(options)
         {
         }
 

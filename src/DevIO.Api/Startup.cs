@@ -21,6 +21,11 @@ namespace DevIO.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<CustomDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DevIO.Api", Version = "v1" });
