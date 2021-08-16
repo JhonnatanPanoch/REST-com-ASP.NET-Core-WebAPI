@@ -66,8 +66,8 @@ namespace DevIO.Api.Controllers
             return CustomResponse(viewModel);
         }
 
-        [ClaimsAuthorize("Fornecedor", "Atualizar")]
         [HttpPut("{id:guid}")]
+        [ClaimsAuthorize("Fornecedor", "Atualizar")]
         public async Task<ActionResult<SupplierViewModel>> Update(Guid id, SupplierViewModel viewModel)
         {
             if (id != viewModel.Id)

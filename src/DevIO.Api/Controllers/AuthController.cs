@@ -19,7 +19,7 @@ using static DevIO.Api.ViewModels.AuthViewModel;
 namespace DevIO.Api.V1.Controllers
 {
     //[ApiVersion("1.0")]
-   // [Route("api/v{version:apiVersion}")]
+    // [Route("api/v{version:apiVersion}")]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -32,7 +32,7 @@ namespace DevIO.Api.V1.Controllers
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             IOptions<AppSettings> appSettings,
-           // IUser user, 
+            // IUser user, 
             ILogger<AuthController> logger) : base(notificador)//base(notificador, user)
         {
             _signInManager = signInManager;
@@ -45,7 +45,7 @@ namespace DevIO.Api.V1.Controllers
         [HttpPost("nova-conta")]
         public async Task<ActionResult> Registrar(RegisterUserViewModel registerUser)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return CustomResponse(ModelState);
 
             var user = new IdentityUser
@@ -96,8 +96,8 @@ namespace DevIO.Api.V1.Controllers
         private async Task<LoginResponseViewModel> GerarJwt(string email)
         {
             IdentityUser user = await _userManager.FindByEmailAsync(email);
-            IList<string> userRoles = await _userManager.GetRolesAsync(user);
             IList<Claim> claims = await _userManager.GetClaimsAsync(user);
+            IList<string> userRoles = await _userManager.GetRolesAsync(user);
 
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
@@ -134,7 +134,11 @@ namespace DevIO.Api.V1.Controllers
                 {
                     Id = user.Id,
                     Email = user.Email,
-                    Claims = claims.Select(c => new ClaimViewModel { Type = c.Type, Value = c.Value })
+                    Claims = claims.Select(c => new ClaimViewModel
+                    {
+                        Type = c.Type,
+                        Value = c.Value
+                    })
                 }
             };
 
