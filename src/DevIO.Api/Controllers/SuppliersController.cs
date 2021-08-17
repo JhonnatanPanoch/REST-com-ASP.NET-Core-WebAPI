@@ -28,7 +28,8 @@ namespace DevIO.Api.Controllers
             IMapper map,
             ISupplierService supplierService,
             INotificator notificator, 
-            IAddressRepository addressRepository) : base(notificator)
+            IAddressRepository addressRepository,
+            IUser user) : base(notificator, user)
         {
             _supplierRepository = supplierRepository;
             _map = map;

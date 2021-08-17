@@ -11,12 +11,15 @@ namespace DevIO.Bussiness.Services
     public class ProductService : BaseService, IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IUser _user;
 
         public ProductService(
             IProductRepository productRepository,
-            INotificator notificator) : base(notificator)
+            INotificator notificator, 
+            IUser user) : base(notificator)
         {
             _productRepository = productRepository;
+            _user = user;
         }
 
         public async Task Insert(Product product)
