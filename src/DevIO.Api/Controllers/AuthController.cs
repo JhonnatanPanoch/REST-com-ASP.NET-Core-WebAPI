@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DevIO.Api.Controllers;
 using DevIO.Api.Extensions;
-using DevIO.Api.ViewModels;
 using DevIO.Bussiness.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +19,7 @@ namespace DevIO.Api.V1.Controllers
 {
     //[ApiVersion("1.0")]
     // [Route("api/v{version:apiVersion}")]
+    [Route("api/v1/[controller]")]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;

@@ -36,7 +36,6 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IEnumerable<ProductViewModel>> GetAll()
         {
             IEnumerable<ProductViewModel> productsWithSuppliers = _mapper.Map<IEnumerable<ProductViewModel>>(await _productRepository.GetProductsSupplier());
@@ -44,7 +43,6 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [AllowAnonymous]
         public async Task<ActionResult<ProductViewModel>> ObterPorId(Guid id)
         {
             ProductViewModel productViewModel = await GetProduct(id);
