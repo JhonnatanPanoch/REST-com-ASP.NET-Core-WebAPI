@@ -37,6 +37,7 @@ namespace DevIO.Api.Controllers
             _addressRepository = addressRepository;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SupplierViewModel>>> GetAll()
         {

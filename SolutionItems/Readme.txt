@@ -28,12 +28,19 @@ Envio de imagens grandes
 			- decorar a view model que tem a imagem grande com: [ModelBinder(typeof(JsonWithFilesFormDataModelBinder), Name = "product")]
 			- para chamar o método via postman, ver exemplo: "MinhaApiCore - Post - LargeImage"
 
-	JWT
-		- Site para validar o token: https://jwt.io/
-        - Token muito grande = problema. Quanto menor a string das claims melhor;
-		- Jti = Json Token Id
-		- Nbf = Not valid before (UnixEpochDate)
-		- Iat = Issued at (UnixEpochDate)
-		- Sub = Subject (guid)
+JWT
+	- Site para validar o token: https://jwt.io/
+    - Token muito grande = problema. Quanto menor a string das claims melhor;
+	- Jti = Json Token Id
+	- Nbf = Not valid before (UnixEpochDate)
+	- Iat = Issued at (UnixEpochDate)
+	- Sub = Subject (guid)
+
+
+Uso obrigatório de HTTPS
+	- Previnir um man in the middle usando um pineapple numa wifi aberta pra roubar informações;
+	- Uso do HSTS (Conersa cliente e servidor somente em https)
+	- UseHttpsRedirection pra forçar https caso tente chamar http
+	- 
 
 
