@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DevIO.Api.Controllers;
 using DevIO.Api.Extensions;
 using DevIO.Bussiness.Interfaces;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,7 @@ using static DevIO.Api.ViewModels.AuthViewModel;
 
 namespace DevIO.Api.V1.Controllers
 {
+    //[DisableCors]
     //[ApiVersion("1.0")]
     // [Route("api/v{version:apiVersion}")]
     [Route("api/v1/[controller]")]

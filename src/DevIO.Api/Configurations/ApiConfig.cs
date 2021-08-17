@@ -29,6 +29,15 @@ namespace DevIO.Api.Configurations
                     .AllowAnyHeader()
                     .SetIsOriginAllowed(origin => true) //.AllowAnyOrigin()
                     .AllowCredentials());
+
+                cors.AddPolicy("Production",
+                    builder =>
+                        builder
+                            .WithMethods("GET")
+                            .WithOrigins("http://desenvolvedor.io")
+                            .SetIsOriginAllowedToAllowWildcardSubdomains() // Permite requests de subdominios
+                            //.WithHeaders(HeaderNames.ContentType, "x-custom-header")
+                            .AllowAnyHeader());
             });
 
             return services;
@@ -36,7 +45,6 @@ namespace DevIO.Api.Configurations
 
         public static IApplicationBuilder UseMvcConfig(this IApplicationBuilder app)
         {
-            app.UseCors("Development"); // Resolver problemas de CORS
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();

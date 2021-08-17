@@ -29,6 +29,10 @@ Envio de imagens grandes
 			- para chamar o método via postman, ver exemplo: "MinhaApiCore - Post - LargeImage"
 
 JWT
+	- O padrão JWT pode ser utilizado em aplicações de qualquer nível. É muito seguro e utilizado em inúmeras aplicações de alto risco (dados sensíveis ex. banking).
+	- Apesar de ser possível ler o conteúdo, apenas com a chave de criptografia é possível manipular e criar um token compatível com a aplicação. 
+	  Não devemos expor dados sensíveis no token devido a facilidade em ler seus dados.
+	- Em ambientes de nuvem (ex. Azure) é possível salvar a chave nas configurações da App evitando a exposição em texto nos arquivos de configuração.
 	- Site para validar o token: https://jwt.io/
     - Token muito grande = problema. Quanto menor a string das claims melhor;
 	- Jti = Json Token Id
@@ -41,6 +45,12 @@ Uso obrigatório de HTTPS
 	- Previnir um man in the middle usando um pineapple numa wifi aberta pra roubar informações;
 	- Uso do HSTS (Conersa cliente e servidor somente em https)
 	- UseHttpsRedirection pra forçar https caso tente chamar http
-	- 
+	
 
+Cross-Origin Resource Sharing (CORS)
+	- Documentação: https://developer.mozilla.org/pt-BR/docs/Web/HTTP/CORS
+	- Mesmo com a politica de CORS implementada, um request funciona usando um postman, 
+	  pq ela é um contrato com o navegador
+	- [DisableCors] aplica o CORS e [EnableCors("Development")] relaxa o CORS. Caso *NÃO* tenha uma configuração global implementada.
+ 
 

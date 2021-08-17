@@ -44,12 +44,14 @@ namespace DevIO.Api
         {
             if (env.IsDevelopment())
             {
+                app.UseCors("Development"); // Resolver problemas de CORS
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DevIO.Api v1"));
             }
             else
             {
+                app.UseCors("Production"); // Resolver problemas de CORS
                 app.UseHsts();
             }
 
