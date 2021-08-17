@@ -52,5 +52,10 @@ Cross-Origin Resource Sharing (CORS)
 	- Mesmo com a politica de CORS implementada, um request funciona usando um postman, 
 	  pq ela é um contrato com o navegador
 	- [DisableCors] aplica o CORS e [EnableCors("Development")] relaxa o CORS. Caso *NÃO* tenha uma configuração global implementada.
+
+Versionamento
+	- intalar pacote: Microsoft.AspNetCore.Mvc.Versioning
+	- instalar pacote: Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer
+	- [ApiVersion("1.0", Deprecated = true)] define a api na versão 1 como obsoleto
  
 

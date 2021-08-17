@@ -14,6 +14,19 @@ namespace DevIO.Api.Configurations
         {
             services.AddControllers();
 
+            // Versionamento da API. (v1, v2, etc)
+            services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.ReportApiVersions = true;
+            });
+            services.AddVersionedApiExplorer(options => 
+            {
+                options.GroupNameFormat = "'v'VVV"; // major and minor version
+                options.SubstituteApiVersionInUrl = true;
+            });
+
             // Remove configuração padrão da validação do ModelState
             services.Configure<ApiBehaviorOptions>(options =>
             {

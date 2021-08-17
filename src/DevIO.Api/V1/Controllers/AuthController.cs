@@ -1,27 +1,26 @@
-﻿using System;
+﻿using DevIO.Api.Controllers;
+using DevIO.Api.Extensions;
+using DevIO.Bussiness.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using DevIO.Api.Controllers;
-using DevIO.Api.Extensions;
-using DevIO.Bussiness.Interfaces;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using static DevIO.Api.ViewModels.AuthViewModel;
 
 namespace DevIO.Api.V1.Controllers
 {
     //[DisableCors]
-    //[ApiVersion("1.0")]
-    // [Route("api/v{version:apiVersion}")]
-    [Route("api/v1/[controller]")]
+    [ApiVersion("2.0")]
+    [ApiVersion("1.0", Deprecated = true)]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;

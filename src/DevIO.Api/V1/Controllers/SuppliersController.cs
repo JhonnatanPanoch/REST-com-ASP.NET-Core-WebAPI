@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevIO.Api.Controllers;
 using DevIO.Api.Extensions;
 using DevIO.Api.ViewModels;
 using DevIO.Bussiness.Interfaces;
@@ -11,11 +12,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DevIO.Api.Controllers
+namespace DevIO.Api.V1.Controllers
 {
     [Authorize]
-    [Route("api/v1/[controller]")]
-    [ApiController]
+    [ApiVersion("1.1")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class SuppliersController : MainController
     {
         private readonly ISupplierRepository _supplierRepository;
