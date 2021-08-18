@@ -37,7 +37,7 @@ namespace DevIO.Api.V1.Controllers
         {
             _signInManager = signInManager;
             _userManager = userManager;
-            _logger = logger;
+            _logger = logger; // Log classico
             _appSettings = appSettings.Value;
         }
 
@@ -78,7 +78,7 @@ namespace DevIO.Api.V1.Controllers
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("Usuario " + loginUser.Email + " logado com sucesso");
+                _logger.LogInformation($"Usuario {loginUser.Email} logado com sucesso");
                 return CustomResponse(await GerarJwt(loginUser.Email));
             }
             if (result.IsLockedOut)

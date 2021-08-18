@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace DevIO.Api.Configurations
 {
+    /// Classe atualizada para seagger v5.0
     public static class SwaggerConfig
     {
         public static IServiceCollection AddSwaggerConfig(this IServiceCollection services)
@@ -20,6 +21,7 @@ namespace DevIO.Api.Configurations
             {
                 c.OperationFilter<SwaggerDefaultValues>();
 
+                // Add Bearer jwt token
                 OpenApiSecurityRequirement security = new OpenApiSecurityRequirement()
                 {
                     {
@@ -53,9 +55,11 @@ namespace DevIO.Api.Configurations
             return services;
         }
 
-        public static IApplicationBuilder UseSwaggerConfig(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
+        public static IApplicationBuilder UseSwaggerConfig(
+            this IApplicationBuilder app,
+            IApiVersionDescriptionProvider provider)
         {
-            //app.UseMiddleware<SwaggerAuthorizedMiddleware>();
+            //app.UseMiddleware<SwaggerAuthorizedMiddleware>(); // Autenticação para uso do swagger. Os middlewares sao executados em ordem de chamada.
             app.UseSwagger();
             app.UseSwaggerUI(
                 options =>
@@ -65,6 +69,7 @@ namespace DevIO.Api.Configurations
                         options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                     }
                 });
+
             return app;
         }
     }
@@ -137,6 +142,7 @@ namespace DevIO.Api.Configurations
         }
     }
 
+    /// Autorização de métodos do swagger
     public class SwaggerAuthorizedMiddleware
     {
         private readonly RequestDelegate _next;
