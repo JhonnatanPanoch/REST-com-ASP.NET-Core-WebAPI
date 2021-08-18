@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace DevIO.Api.V1.Controllers
 {
     [Authorize]
-    [ApiVersion("1.1")]
+    [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class SuppliersController : MainController
     {

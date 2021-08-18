@@ -18,8 +18,7 @@ using static DevIO.Api.ViewModels.AuthViewModel;
 namespace DevIO.Api.V1.Controllers
 {
     //[DisableCors]
-    [ApiVersion("2.0")]
-    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class AuthController : MainController
     {

@@ -57,5 +57,9 @@ Versionamento
 	- intalar pacote: Microsoft.AspNetCore.Mvc.Versioning
 	- instalar pacote: Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer
 	- [ApiVersion("1.0", Deprecated = true)] define a api na versão 1 como obsoleto
+
+Swagger
+	- instalar o pacote: Swashbuckle.AspNetCore
+	- 
  
 
