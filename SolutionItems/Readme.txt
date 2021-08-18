@@ -60,6 +60,15 @@ Versionamento
 
 Swagger
 	- instalar o pacote: Swashbuckle.AspNetCore
-	- 
+	- ver configurações específicas no arquivo SwaggerConfig
+	- Os middlewares são executados em ordem de chamada, então, caso tenha SwaggerAuthorizedMiddleware deve estar por primeiro
+
+Elmah
+	- documentação: https://elmah.io/
+	- precisa um usuário 
+	- instalar o pacote: Elmah.Io.AspNetCore
+	- instalar pacote: Elmah.Io.Extensions.Logging
+	- O elmah só loga erros tratados. Lançar erro com o ex.Ship
+	- Para resolver o tópico acima, criar um middleware para manusear os erros. "app.UseMiddleware<ExceptionMiddleware>();"
  
 

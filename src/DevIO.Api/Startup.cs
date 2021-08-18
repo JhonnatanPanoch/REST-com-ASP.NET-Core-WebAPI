@@ -1,4 +1,6 @@
+using DevIO.Api.Configuration;
 using DevIO.Api.Configurations;
+using DevIO.Api.Extensions;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,10 +29,9 @@ namespace DevIO.Api
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddLoggingConfiguration(Configuration);
             services.AddIdentityConfig(Configuration);
-
             services.AddAutoMapper(typeof(Startup));
-
             services.WebApiConfig();
             services.AddSwaggerConfig();
 
@@ -51,6 +52,8 @@ namespace DevIO.Api
             }
 
             app.UseAuthentication();
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseLoggingConfiguration();
             app.UseMvcConfig();
             app.UseSwaggerConfig(provider);
         }
