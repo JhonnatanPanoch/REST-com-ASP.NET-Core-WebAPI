@@ -70,5 +70,24 @@ Elmah
 	- instalar pacote: Elmah.Io.Extensions.Logging
 	- O elmah só loga erros tratados. Lançar erro com o ex.Ship
 	- Para resolver o tópico acima, criar um middleware para manusear os erros. "app.UseMiddleware<ExceptionMiddleware>();"
+
+HealthChecks
+	-  app.UseHealthChecks("/api/hc"); acessado via "/api/hc" na url
+	- documentação: https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
+	- Instalar o pacote: Install-Package AspNetCore.HealthChecks.SqlServer para verificar a saude perante o banco.
+	- Instar o pacote: AspNetCore.HealthChecks.UI para interface visual. Acessar usando o /api/hc-ui na url
+	- 
  
 
+ Deploy IIS
+	- É necessario o hosting bundle fo windows para poder fazer o deploy
+	- Iniciar o VS no modo admin
+	- O banco do tipo (localdb)\\mssqllocaldb não vai funcionar publicado, é preciso criar e apontar para um banco sql server 
+	- Via Web Deploy o VS gera os arquivos em '\bin\Release\net5.0'
+	
+Deploy SelfHosting
+	- Rodar o comando: dotnet run --project DevIO.Api.csproj no csproj do projeto api. Já ta rodando.
+	- Outro jeito: 
+		- Gerar publish em modo folder
+		- Copiar o caminho do publish
+		- Executar o comando: dotnet DevIO.Api.dll
