@@ -1,19 +1,22 @@
-﻿using System;
-using DevIO.Api.Controllers;
-using DevIO.Business.Intefaces;
+﻿using DevIO.Api.Controllers;
+using DevIO.Bussiness.Interfaces;
 using Elmah.Io.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace DevIO.Api.V2.Controllers
 {
     [ApiVersion("2.0")]
-    [Route("api/v{version:apiVersion}/teste")]
-    public class TesteController : MainController
+    [Route("api/v{version:apiVersion}/[controller]")]
+    public class TesteVersaoController : MainController
     {
         private readonly ILogger _logger;
 
-        public TesteController(INotificador notificador, IUser appUser, ILogger<TesteController> logger) : base(notificador, appUser)
+        public TesteVersaoController(
+            INotificator notificator, 
+            IUser appUser,
+            ILogger<TesteVersaoController> logger) : base(notificator, appUser)
         {
             _logger = logger;
         }
@@ -21,18 +24,17 @@ namespace DevIO.Api.V2.Controllers
         [HttpGet]
         public string Valor()
         {
-
             throw new Exception("Error");
 
-            try
-            {
-                var i = 0;
-                var result = 42 / i;
-            }
-            catch (DivideByZeroException e)
-            {
-                e.Ship(HttpContext);
-            }
+            //try
+            //{
+            //    var i = 0;
+            //    var result = 42 / i;
+            //}
+            //catch (DivideByZeroException e)
+            //{
+            //    e.Ship(HttpContext);
+            //}
 
             _logger.LogTrace("Log de Trace");
             _logger.LogDebug("Log de Debug");
@@ -41,7 +43,7 @@ namespace DevIO.Api.V2.Controllers
             _logger.LogError("Log de Erro");
             _logger.LogCritical("Log de Problema Critico");
 
-            return "Sou a V2";
+            return "Versão 2";
         }
     }
 }

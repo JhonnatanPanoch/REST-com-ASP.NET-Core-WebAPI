@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using DevIO.Api.Controllers;
+using DevIO.Api.Extensions;
 using DevIO.Api.ViewModels;
 using DevIO.Bussiness.Interfaces;
 using DevIO.Bussiness.Interfaces.Repository;
@@ -10,11 +12,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DevIO.Api.Controllers
+namespace DevIO.Api.V1.Controllers
 {
-    //[Authorize]
-    [Route("api/v1/[controller]")]
-    [ApiController]
+    [Authorize]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class SuppliersController : MainController
     {
         private readonly ISupplierRepository _supplierRepository;
@@ -27,7 +29,8 @@ namespace DevIO.Api.Controllers
             IMapper map,
             ISupplierService supplierService,
             INotificator notificator, 
-            IAddressRepository addressRepository) : base(notificator)
+            IAddressRepository addressRepository,
+            IUser user) : base(notificator, user)
         {
             _supplierRepository = supplierRepository;
             _map = map;
@@ -35,6 +38,7 @@ namespace DevIO.Api.Controllers
             _addressRepository = addressRepository;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SupplierViewModel>>> GetAll()
         {
@@ -52,7 +56,8 @@ namespace DevIO.Api.Controllers
             SupplierViewModel supplier = _map.Map<SupplierViewModel>(await _supplierRepository.GetSupplierProductsAdress(id));
             return Ok(supplier);
         }
-
+        
+        [ClaimsAuthorize("Fornecedor", "Adicionar")]
         [HttpPost]
         public async Task<ActionResult<SupplierViewModel>> Create(SupplierViewModel viewModel)
         {
@@ -65,6 +70,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [ClaimsAuthorize("Fornecedor", "Atualizar")]
         public async Task<ActionResult<SupplierViewModel>> Update(Guid id, SupplierViewModel viewModel)
         {
             if (id != viewModel.Id)
@@ -81,6 +87,7 @@ namespace DevIO.Api.Controllers
             return CustomResponse(viewModel);
         }
 
+        [ClaimsAuthorize("Fornecedor", "Excluir")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<SupplierViewModel>> Delete(Guid id)
         {
@@ -100,6 +107,7 @@ namespace DevIO.Api.Controllers
             return addressViewModel;
         }
 
+        [ClaimsAuthorize("Fornecedor", "Atualizar")]
         [HttpPut("atualizar-endereco/{id:guid}")]
         public async Task<ActionResult<AddressViewModel>> UpdateAddress(Guid id, AddressViewModel addressViewModel)
         {

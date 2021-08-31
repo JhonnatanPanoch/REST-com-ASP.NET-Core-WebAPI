@@ -14,6 +14,19 @@ namespace DevIO.Api.Configurations
         {
             services.AddControllers();
 
+            // Versionamento da API. (v1, v2, etc)
+            services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.ReportApiVersions = true;
+            });
+            services.AddVersionedApiExplorer(options => 
+            {
+                options.GroupNameFormat = "'v'VVV"; // major and minor version
+                options.SubstituteApiVersionInUrl = true;
+            });
+
             // Remove configuração padrão da validação do ModelState
             services.Configure<ApiBehaviorOptions>(options =>
             {
@@ -29,6 +42,15 @@ namespace DevIO.Api.Configurations
                     .AllowAnyHeader()
                     .SetIsOriginAllowed(origin => true) //.AllowAnyOrigin()
                     .AllowCredentials());
+
+                cors.AddPolicy("Production",
+                    builder =>
+                        builder
+                            .WithMethods("GET")
+                            .WithOrigins("http://desenvolvedor.io")
+                            .SetIsOriginAllowedToAllowWildcardSubdomains() // Permite requests de subdominios
+                            //.WithHeaders(HeaderNames.ContentType, "x-custom-header")
+                            .AllowAnyHeader());
             });
 
             return services;
@@ -36,7 +58,6 @@ namespace DevIO.Api.Configurations
 
         public static IApplicationBuilder UseMvcConfig(this IApplicationBuilder app)
         {
-            app.UseCors("Development"); // Resolver problemas de CORS
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();

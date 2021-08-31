@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using DevIO.Api.Controllers;
+using DevIO.Api.Extensions;
 using DevIO.Api.ViewModels;
 using DevIO.Bussiness.Interfaces;
 using DevIO.Bussiness.Interfaces.Repository;
@@ -8,16 +10,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace DevIO.Api.Controllers
+namespace DevIO.Api.V1.Controllers
 {
     [Authorize]
-    [ApiController]
-    [Route("api/v1/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ProductsController : MainController
     {
         private readonly IProductRepository _productRepository;
@@ -28,14 +29,14 @@ namespace DevIO.Api.Controllers
             INotificator notificator,
             IMapper map,
             IProductService roductService,
-            IProductRepository productRepository) : base(notificator)
+            IProductRepository productRepository,
+            IUser user) : base(notificator, user)
         {
             _mapper = map;
             _productService = roductService;
             _productRepository = productRepository;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IEnumerable<ProductViewModel>> GetAll()
         {
@@ -55,6 +56,7 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpDelete("{id}:guid")]
+        [ClaimsAuthorize("Produto", "Excluir")]
         public async Task<ActionResult<ProductViewModel>> Delete(Guid id)
         {
             ProductViewModel productViewModel = await GetProduct(id);
@@ -67,72 +69,8 @@ namespace DevIO.Api.Controllers
             return CustomResponse(productViewModel);
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public async Task<ActionResult<ProductViewModel>> Create(ProductViewModel viewModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                ActionResult handler = CustomResponse(ModelState);
-                return handler;
-            }
-
-            try
-            {
-                viewModel.Image = Guid.NewGuid() + "_" + viewModel.Image;
-                if (!UploadFile(viewModel.ImageUpload, viewModel.Image))
-                    return CustomResponse();
-
-                await _productService.Insert(_mapper.Map<Product>(viewModel));
-            }
-            catch (Exception ex)
-            {
-                NotifyError(ex.Message);
-            }
-
-            return CustomResponse(viewModel);
-        }
-
-        /// Adicionar com opção de imagem muito grande.
-        [RequestSizeLimit(410267659)]
-        //[DisableRequestSizeLimit]
-        [HttpPost("createLargeImage")]
-        public async Task<ActionResult<ProductViewModel>> CreateAlternativo(ProductImageViewModel viewModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                ActionResult handler = CustomResponse(ModelState);
-                return handler;
-            }
-
-            try
-            {
-                string imgPrefix = Guid.NewGuid() + "_";
-                if (!await UploadFileAlternative(viewModel.ImageUpload, imgPrefix))
-                    return CustomResponse();
-
-                viewModel.Image = imgPrefix + viewModel.ImageUpload.FileName;
-
-                await _productService.Insert(_mapper.Map<Product>(viewModel));
-            }
-            catch (Exception ex)
-            {
-                NotifyError(ex.Message);
-            }
-
-            return CustomResponse(viewModel);
-        }
-
-        // Exemplo para receber um request de imagem mto grande
-        [RequestSizeLimit(410267659)]
-        //[DisableRequestSizeLimit]
-        [HttpPost("testRequestImage")]
-        public ActionResult AdicionarImagem(IFormFile file)
-        {
-            return Ok(file);
-        }
-
         [HttpPut("{id:guid}")]
+        [ClaimsAuthorize("Produto", "Alterar")]
         public async Task<IActionResult> Update(Guid id, ProductViewModel productViewModel)
         {
             if (id != productViewModel.Id)
@@ -164,6 +102,73 @@ namespace DevIO.Api.Controllers
             await _productService.Update(_mapper.Map<Product>(produtoAtualizacao));
 
             return CustomResponse(productViewModel);
+        }
+
+        [HttpPost]
+        [ClaimsAuthorize("Produto", "Adicionar")]
+        public async Task<ActionResult<ProductViewModel>> Create(ProductViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                ActionResult handler = CustomResponse(ModelState);
+                return handler;
+            }
+
+            try
+            {
+                viewModel.Image = Guid.NewGuid() + "_" + viewModel.Image;
+                if (!UploadFile(viewModel.ImageUpload, viewModel.Image))
+                    return CustomResponse();
+
+                await _productService.Insert(_mapper.Map<Product>(viewModel));
+            }
+            catch (Exception ex)
+            {
+                NotifyError(ex.Message);
+            }
+
+            return CustomResponse(viewModel);
+        }
+
+        /// Adicionar com opção de imagem muito grande.
+        //[DisableRequestSizeLimit]
+        [RequestSizeLimit(410267659)]
+        [HttpPost("createLargeImage")]
+        [ClaimsAuthorize("Produto", "Adicionar")]
+        public async Task<ActionResult<ProductViewModel>> CreateAlternativo(ProductImageViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                ActionResult handler = CustomResponse(ModelState);
+                return handler;
+            }
+
+            try
+            {
+                string imgPrefix = Guid.NewGuid() + "_";
+                if (!await UploadFileAlternative(viewModel.ImageUpload, imgPrefix))
+                    return CustomResponse();
+
+                viewModel.Image = imgPrefix + viewModel.ImageUpload.FileName;
+
+                await _productService.Insert(_mapper.Map<Product>(viewModel));
+            }
+            catch (Exception ex)
+            {
+                NotifyError(ex.Message);
+            }
+
+            return CustomResponse(viewModel);
+        }
+
+        // Exemplo para receber um request de imagem mto grande
+        //[DisableRequestSizeLimit]
+        [RequestSizeLimit(410267659)]
+        [HttpPost("testRequestImage")]
+        [ClaimsAuthorize("Produto", "Adicionar")]
+        public ActionResult AdicionarImagem(IFormFile file)
+        {
+            return Ok(file);
         }
 
         private bool UploadFile(string file, string imgName)

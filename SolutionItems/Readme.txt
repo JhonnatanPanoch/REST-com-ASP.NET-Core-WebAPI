@@ -28,3 +28,66 @@ Envio de imagens grandes
 			- decorar a view model que tem a imagem grande com: [ModelBinder(typeof(JsonWithFilesFormDataModelBinder), Name = "product")]
 			- para chamar o método via postman, ver exemplo: "MinhaApiCore - Post - LargeImage"
 
+JWT
+	- O padrão JWT pode ser utilizado em aplicações de qualquer nível. É muito seguro e utilizado em inúmeras aplicações de alto risco (dados sensíveis ex. banking).
+	- Apesar de ser possível ler o conteúdo, apenas com a chave de criptografia é possível manipular e criar um token compatível com a aplicação. 
+	  Não devemos expor dados sensíveis no token devido a facilidade em ler seus dados.
+	- Em ambientes de nuvem (ex. Azure) é possível salvar a chave nas configurações da App evitando a exposição em texto nos arquivos de configuração.
+	- Site para validar o token: https://jwt.io/
+    - Token muito grande = problema. Quanto menor a string das claims melhor;
+	- Jti = Json Token Id
+	- Nbf = Not valid before (UnixEpochDate)
+	- Iat = Issued at (UnixEpochDate)
+	- Sub = Subject (guid)
+
+
+Uso obrigatório de HTTPS
+	- Previnir um man in the middle usando um pineapple numa wifi aberta pra roubar informações;
+	- Uso do HSTS (Conersa cliente e servidor somente em https)
+	- UseHttpsRedirection pra forçar https caso tente chamar http
+	
+
+Cross-Origin Resource Sharing (CORS)
+	- Documentação: https://developer.mozilla.org/pt-BR/docs/Web/HTTP/CORS
+	- Mesmo com a politica de CORS implementada, um request funciona usando um postman, 
+	  pq ela é um contrato com o navegador
+	- [DisableCors] aplica o CORS e [EnableCors("Development")] relaxa o CORS. Caso *NÃO* tenha uma configuração global implementada.
+
+Versionamento
+	- intalar pacote: Microsoft.AspNetCore.Mvc.Versioning
+	- instalar pacote: Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer
+	- [ApiVersion("1.0", Deprecated = true)] define a api na versão 1 como obsoleto
+
+Swagger
+	- instalar o pacote: Swashbuckle.AspNetCore
+	- ver configurações específicas no arquivo SwaggerConfig
+	- Os middlewares são executados em ordem de chamada, então, caso tenha SwaggerAuthorizedMiddleware deve estar por primeiro
+
+Elmah
+	- documentação: https://elmah.io/
+	- precisa um usuário 
+	- instalar o pacote: Elmah.Io.AspNetCore
+	- instalar pacote: Elmah.Io.Extensions.Logging
+	- O elmah só loga erros tratados. Lançar erro com o ex.Ship
+	- Para resolver o tópico acima, criar um middleware para manusear os erros. "app.UseMiddleware<ExceptionMiddleware>();"
+
+HealthChecks
+	-  app.UseHealthChecks("/api/hc"); acessado via "/api/hc" na url
+	- documentação: https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
+	- Instalar o pacote: Install-Package AspNetCore.HealthChecks.SqlServer para verificar a saude perante o banco.
+	- Instar o pacote: AspNetCore.HealthChecks.UI para interface visual. Acessar usando o /api/hc-ui na url
+	- 
+ 
+
+ Deploy IIS
+	- É necessario o hosting bundle fo windows para poder fazer o deploy
+	- Iniciar o VS no modo admin
+	- O banco do tipo (localdb)\\mssqllocaldb não vai funcionar publicado, é preciso criar e apontar para um banco sql server 
+	- Via Web Deploy o VS gera os arquivos em '\bin\Release\net5.0'
+	
+Deploy SelfHosting
+	- Rodar o comando: dotnet run --project DevIO.Api.csproj no csproj do projeto api. Já ta rodando.
+	- Outro jeito: 
+		- Gerar publish em modo folder
+		- Copiar o caminho do publish
+		- Executar o comando: dotnet DevIO.Api.dll
